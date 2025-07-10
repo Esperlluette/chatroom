@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<title>Onion Chat</title>
+<style>
+  body {
+    font-family: sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+  }
+
+  #chat {
+    border: 1px solid #888;
+    height: 300px;
+    overflow-y: auto;
+    padding: .5rem;
+  }
+</style>
+
+<h2>Public Chat</h2>
+<h5><i>this is a public beta, updates will come</i></h5>
+<div id="chat"></div>
+
+<form id="f">
+  <!-- <input id="nick" placeholder="pseudo" required />
+  <input id="pwd" type="password" placeholder="password" required />-->
+  <input id="msg" placeholder="message" required style="width: 60%" />
+  <button>Envoyer</button>
+</form>
+
+<script>
+  const ws = new WebSocket(location.origin.replace(/^http/, 'ws'));
+  const chat = document.getElementById('chat');
+  ws.onmessage = e => {
+    chat.innerHTML += e.data + '<br>'; chat.scrollTop = chat.scrollHeight;
+  };
+  document.getElementById('f').onsubmit = e => {
+    e.preventDefault();
+    ws.send(`${msg.value}`);
+    msg.value = '';
+  };
+  msg.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      ws.send(`${msg.value}`);
+      msg.value = '';
+    }
+  });
+</script>
